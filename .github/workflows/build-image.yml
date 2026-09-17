@@ -1,20 +1,21 @@
 # Buduje obraz LLM do pisania tekstów piosenek: oficjalny runpod-workers/worker-vllm (vLLM OpenAI server + wrapper
 # RunPod Serverless) z WYPIECZONYM modelem (build-arg MODEL_NAME), żeby cold start nie pobierał wag z Hugging Face.
-# Uruchomienie: Actions -> "Build lyrics LLM worker image" -> Run workflow (tag v1, model), albo push taga v*.
-# Obraz: ghcr.io/<owner>/lyrics-llm-worker:<tag>  (~28 GB: vllm-openai ~11 GB + Gemma 4 E4B bf16 16 GB)
+# Uruchomienie: Actions -> "Build lyrics LLM worker image" -> Run workflow (tag, model), albo push taga v*.
+# Obraz: ghcr.io/<owner>/lyrics-llm-worker:<tag>  (~28 GB: vllm-openai ~11 GB + wagi modelu; v1 = Gemma 4 E4B bf16 16 GB,
+# v2 = Gemma 4 26B-A4B int4 QAT 17 GB)
 name: Build lyrics LLM worker image
 
 on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Tag obrazu (np. v1)"
+        description: "Tag obrazu (np. v2)"
         required: true
-        default: "v1"
+        default: "v2"
       model_name:
         description: "Repo HF modelu do wypieczenia"
         required: true
-        default: "google/gemma-4-E4B-it"
+        default: "cyankiwi/gemma-4-26B-A4B-it-qat-AWQ-INT4"
       worker_vllm_ref:
         description: "Tag runpod-workers/worker-vllm"
         required: true
@@ -75,7 +76,7 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT";
           else echo "tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"; fi
-          echo "model=${{ inputs.model_name || 'google/gemma-4-E4B-it' }}" >> "$GITHUB_OUTPUT"
+          echo "model=${{ inputs.model_name || 'cyankiwi/gemma-4-26B-A4B-it-qat-AWQ-INT4' }}" >> "$GITHUB_OUTPUT"
           echo "vllm=${{ inputs.vllm_version || 'v0.29.0' }}" >> "$GITHUB_OUTPUT"
           echo "image=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/lyrics-llm-worker" >> "$GITHUB_OUTPUT"
 
