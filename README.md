@@ -1,3 +1,5 @@
+> **Nieużywane od 2026-09-17.** Decyzja: rezygnujemy z LLM do tekstów na RunPod – endpoint i templaty usunięte, funkcje `musicSuggestLyrics`/`musicWriteLyrics` skasowane. Podpowiedzi tekstu robi wyłącznie aplikacja na urządzeniu (Apple Foundation Models → Gemma 4 E4B przez MLX). Repo i obrazy `v1`/`v2` zostają jako referencja (nic nie kostują). Szczegóły i pomiary: `ringtones_repo/runpod/README.md`.
+
 # lyrics-llm-worker
 
 Obraz RunPod Serverless do pisania tekstów piosenek dla aplikacji Music AI: `runpod-workers/worker-vllm` v2.27.0 (vLLM 0.29)
